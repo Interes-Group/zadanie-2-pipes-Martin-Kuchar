@@ -23,7 +23,7 @@ public class GameLogic extends UniversalAdapter {
     public GameLogic() {
         this.mazeSize = 10;
 
-        this.generateMaze(mazeSize);
+        this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
         this.render.addMouseListener(this);
         this.render.addMouseMotionListener(this);
