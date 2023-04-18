@@ -34,5 +34,4 @@ public class Render extends JPanel {
         super.paintComponent(g);
         this.maze.draw(g);
     }
-
 }

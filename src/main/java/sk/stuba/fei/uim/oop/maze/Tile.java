@@ -8,19 +8,21 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import lombok.Getter;
 import lombok.Setter;
 
 public class Tile extends JPanel{
-    
-    private final int x;
-    private final int y;
-    public ArrayList<Direction> direction; //set to private!!
+    @Getter
+    protected final int xPos;
+    @Getter
+    protected final int yPos;
+    protected ArrayList<Direction> direction; //set to private!!
     @Setter
-    private boolean highlight; 
+    protected boolean highlight; 
 
     public Tile(int x, int y) {
-        this.x = x;
-        this.y = y;
+        this.xPos = x;
+        this.yPos = y;
         this.direction = new ArrayList<Direction>();
         this.highlight = false;
         
@@ -55,11 +57,13 @@ public class Tile extends JPanel{
         super.paint(g);
         g.setColor(Color.black);
         g.drawRect(0, 0, this.getWidth(), this.getHeight());
-
+        
         if(this.highlight) {
             ((Graphics2D) g).setStroke(new BasicStroke(10));
             g.drawRect(0, 0, this.getWidth(), this.getHeight());
             this.highlight = false;
+            System.out.println(this.xPos);
+            System.out.println(this.yPos);
         }
     }
 }

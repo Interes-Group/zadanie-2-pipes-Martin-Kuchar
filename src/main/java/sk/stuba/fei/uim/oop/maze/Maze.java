@@ -2,6 +2,7 @@ package sk.stuba.fei.uim.oop.maze;
 
 import java.awt.Graphics;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -11,19 +12,12 @@ import lombok.Setter;
 public class Maze {
     @Setter @Getter
     private int size;
-    private Random rand = new Random();
     private Tile[][] maze;
 
     public Maze(int size) {
         this.size = size;
-        this.maze = new Tile[size][size];
 
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.maze[i][j] = new Tile(i, j);
-            }
-        }
-
+        this.initializeMaze();
         this.generateMaze();
     }
 
@@ -32,44 +26,69 @@ public class Maze {
     }
 
     private void generateMaze() {
+
         int[] start = {0,0};
         int[] end = {this.size-1, this.size-1};
 
-        ArrayList<int[]> neigbors = new ArrayList<int[]>();
+        ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
         HashSet<Tile> visited = new HashSet<Tile>();
+        
+       stack.add(new Step(this.maze[start[0]][start[1]], null));
 
-        int[] current = start;
-
-        while(current != end) {
-            this.maze[current[0]][current[1]] = new ITile(current[0], current[1]);
-            path.add(this.getTile(current[0], current[1]));
-            visited.add(this.getTile(current[0], current[1]));
-            neigbors = getNeighbors(current[0], current[1], visited);
-            if(neigbors.size() < 1) {break;}
-            current = neigbors.get(rand.nextInt(neigbors.size()));
+       while (!stack.isEmpty()) {
+            Step step = stack.remove(0);
+            Tile currentNode = step.getCurrent();
+            if (visited.contains(currentNode)) {
+                continue;
+            }
+            if (step.getPrevious() != null) {
+                path.add(step.getPrevious());
+            }
+            //ArrayList<Tile> allNeighbours = currentNode.getAllNeighbour();
+            ArrayList<Tile> allNeighbours = this.getNeighbors(currentNode.getXPos(), currentNode.getYPos(), visited);
+            Collections.shuffle(allNeighbours);
+            allNeighbours.forEach(neighbour -> {
+                if (!visited.contains(neighbour)) {
+                    stack.add(0, new Step(neighbour, currentNode));
+                }
+            });
+            visited.add(currentNode);
+        }
+        for (Tile t : path) {
+            this.maze[t.getXPos()][t.getYPos()] = new ITile(t.getXPos(), t.getYPos());
         }
 
     }
 
-    private ArrayList<int[]> getNeighbors(int x, int y, HashSet<Tile> visited) {
-        ArrayList<int[]> a = new ArrayList<int[]>();
+    private ArrayList<Tile> getNeighbors(int x, int y, HashSet<Tile> visited) {
+        ArrayList<Tile> a = new ArrayList<Tile>();
 
         if (x > 0 && !visited.contains(this.getTile(x-1, y))) {
-            a.add(new int[]{x - 1, y});
+            a.add(this.getTile(x-1, y));
         }
         if (y > 0 && !visited.contains(this.getTile(x, y-1))) {
-            a.add(new int[]{x, y - 1});
+            a.add(this.getTile(x, y-1));
         }
         if (x < this.size - 1 && !visited.contains(this.getTile(x+1, y))) {
-            a.add(new int[]{x + 1, y});
+            a.add(this.getTile(x+1, y));
         }
         if (y < this.size - 1 && !visited.contains(this.getTile(x, y+1))) {
-            a.add(new int[]{x, y + 1});
+            a.add(this.getTile(x, y+1));
         }
 
 
         return a;
+    }
+
+    private void initializeMaze() {
+        this.maze = new Tile[this.size][this.size];
+
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                this.maze[i][j] = new Tile(i, j);
+            }
+        }
     }
 
     public void draw(Graphics g) {

@@ -22,6 +22,6 @@ public class ITile extends Tile {
         }
         else {
             g.fillRect(0, (this.getHeight()/2)-6, this.getWidth(), 12);
-        }
+        }   
     }
 }

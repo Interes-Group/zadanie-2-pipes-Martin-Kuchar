@@ -36,6 +36,7 @@ public class GameLogic extends UniversalAdapter {
         if (this.render != null) {
             this.render.setMaze(this.maze);
             this.render.revalidate();
+
         }
     }
 
@@ -56,7 +57,7 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Component c = (Component)this.render.getComponentAt(e.getX(), e.getY());
+        Component c = (Component)this.render.getComponentAt(e.getPoint());
         if(c instanceof Tile){
             ((Tile)c).rotateDirection();
             this.render.repaint();
@@ -68,6 +69,7 @@ public class GameLogic extends UniversalAdapter {
         Component c = (Component)this.render.getComponentAt(e.getPoint());
         if(c instanceof Tile) {
             ((Tile) c ).setHighlight(true);
+            this.render.revalidate();
             this.render.repaint();
         }
 
