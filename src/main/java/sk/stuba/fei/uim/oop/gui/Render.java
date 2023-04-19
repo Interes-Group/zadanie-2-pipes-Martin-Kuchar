@@ -31,10 +31,4 @@ public class Render extends JPanel {
         }
         
     }
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        //this.maze.draw(g);
-    }
 }

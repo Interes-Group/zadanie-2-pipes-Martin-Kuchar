@@ -19,7 +19,13 @@ public class Maze {
     public Maze(int size) {
         this.size = size;
 
-        this.initializeMaze();
+        this.maze = new Tile[this.size][this.size];
+
+        for (int i = 0; i < this.size; i++) {
+            for (int j = 0; j < this.size; j++) {
+                this.maze[j][i] = new Tile(j, i);
+            }
+        }
         this.generateMaze();
     }
 
@@ -43,12 +49,13 @@ public class Maze {
        while (!stack.isEmpty()) {
             Step step = stack.remove(0);
             Tile currentNode = step.getCurrent();
+        
             if (visited.contains(currentNode)) {
                 continue;
             }
             if (step.getPrevious() != null) {
-                path.add(currentNode);
-                //path.add(step.getPrevious());
+                //path.add(currentNode);
+                path.add(step.getPrevious());
             }
             if(currentNode == this.maze[size-1][size-1]) {
                 path.add(currentNode);
@@ -71,7 +78,7 @@ public class Maze {
         this.start = this.maze[path.get(0).getXPos()][path.get(0).getYPos()];
         this.end = this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()];
 
-        //ste other
+        //set other
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
             
@@ -107,38 +114,55 @@ public class Maze {
         return a;
     }
 
-    private void initializeMaze() {
-        this.maze = new Tile[this.size][this.size];
-
-        for (int i = 0; i < this.size; i++) {
-            for (int j = 0; j < this.size; j++) {
-                this.maze[j][i] = new Tile(j, i);
-            }
-        }
-    }
-
     public boolean checkMaze() {
         
         Tile curr = this.start;
         ArrayList<Tile> neighbors;
         HashSet<Tile> visited = new HashSet<Tile>();
-
+        Direction lastDir = null;
+        //najde aj pipe ktore su spravne otocene ale nejsu v spravnom x y
+        //GL s fixom :D
 
         while(curr != this.end) {
             neighbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
+            if  (neighbors.size() == 0) {
+                return false;
+            }
+            visited.add(curr);
+            for (Tile t : neighbors) {
+                if (t instanceof LTile || t instanceof ITile || t instanceof EndTile) {
+                    if (curr.getDirection().contains(Direction.DOWN) && t.getDirection().contains(Direction.UP) && lastDir != Direction.DOWN) {
+                        t.setInPath(true);
+                        lastDir = Direction.UP;
+                        curr = t;
+                        break;
+                    }
+                    else if (curr.getDirection().contains(Direction.UP) && t.getDirection().contains(Direction.DOWN) && lastDir != Direction.UP) {
+                        t.setInPath(true);
+                        lastDir = Direction.DOWN;
+                        curr = t;
+                        break;
+                    }
+                    else if (curr.getDirection().contains(Direction.RIGHT) && t.getDirection().contains(Direction.LEFT) && lastDir != Direction.RIGHT) {
+                        t.setInPath(true);
+                        lastDir = Direction.LEFT;
+                        curr = t;
+                        break;
+                    }
+                    else if (curr.getDirection().contains(Direction.LEFT) && t.getDirection().contains(Direction.RIGHT) && lastDir != Direction.LEFT) {
+                        t.setInPath(true);
+                        lastDir = Direction.RIGHT;
+                        curr = t;
+                        break;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+            }
 
         }
-        
-        
         
         return true;
-    }
-
-    public void draw(Graphics g) {
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                this.maze[i][j].paintComponent(g);
-            }
-        }
     }
 }

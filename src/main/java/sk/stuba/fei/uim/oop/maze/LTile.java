@@ -16,7 +16,12 @@ public class LTile extends Tile {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        g.setColor(Color.BLUE);
+        if (this.inPath) {
+            g.setColor(Color.CYAN);
+        }
+        else {
+            g.setColor(Color.BLUE);
+        }
 
         if (this.direction.contains(Direction.UP)) {
             g.fillRect(this.getWidth()/2-6, 0, 12, this.getHeight()/2);

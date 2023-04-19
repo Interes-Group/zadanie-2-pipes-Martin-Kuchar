@@ -7,6 +7,10 @@ public class EndTile extends Tile {
 
     public EndTile(int x, int y) {
         super(x, y);
+        this.direction.add(Direction.UP);
+        this.direction.add(Direction.LEFT);
+        this.direction.add(Direction.DOWN);
+        this.direction.add(Direction.RIGHT);
     }
     
     @Override

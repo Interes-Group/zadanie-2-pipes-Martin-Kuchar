@@ -16,15 +16,19 @@ public class Tile extends JPanel{
     protected final int xPos;
     @Getter
     protected final int yPos;
+    @Getter
     protected ArrayList<Direction> direction; //set to private!!
     @Setter
-    protected boolean highlight; 
+    protected boolean highlight;
+    @Setter
+    protected boolean inPath; 
 
     public Tile(int x, int y) {
         this.xPos = x;
         this.yPos = y;
         this.direction = new ArrayList<Direction>();
         this.highlight = false;
+        this.inPath = false;
         
     }
 

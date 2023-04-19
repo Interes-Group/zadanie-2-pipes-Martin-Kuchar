@@ -22,7 +22,7 @@ public class GameLogic extends UniversalAdapter {
     private JFrame frame;
 
     public GameLogic(JFrame f) {
-        this.mazeSize = 6;
+        this.mazeSize = 4;
         this.frame = f;
         this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
@@ -52,6 +52,7 @@ public class GameLogic extends UniversalAdapter {
         }
         else if(e.getKeyCode() == 32) {
             this.maze.checkMaze();
+            this.render.repaint();
         }
     }
 
@@ -62,6 +63,7 @@ public class GameLogic extends UniversalAdapter {
         }
         else {
             this.maze.checkMaze();
+            this.render.repaint();
         }
     }
 
