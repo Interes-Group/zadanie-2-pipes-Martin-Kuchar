@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,10 @@ import lombok.Setter;
 public class Maze {
     @Setter @Getter
     private int size;
+    @Getter
     private Tile[][] maze;
+    private Tile start;
+    private Tile end;
 
     public Maze(int size) {
         this.size = size;
@@ -22,7 +24,8 @@ public class Maze {
     }
 
     public Tile getTile(int x, int y) {
-        return this.maze[x][y];
+        Tile t = this.maze[x][y];
+        return t;
     }
 
     private void generateMaze() {
@@ -33,6 +36,7 @@ public class Maze {
         ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
         HashSet<Tile> visited = new HashSet<Tile>();
+
         
        stack.add(new Step(this.maze[start[0]][start[1]], null));
 
@@ -43,7 +47,12 @@ public class Maze {
                 continue;
             }
             if (step.getPrevious() != null) {
-                path.add(step.getPrevious());
+                path.add(currentNode);
+                //path.add(step.getPrevious());
+            }
+            if(currentNode == this.maze[size-1][size-1]) {
+                path.add(currentNode);
+                break;
             }
             //ArrayList<Tile> allNeighbours = currentNode.getAllNeighbour();
             ArrayList<Tile> allNeighbours = this.getNeighbors(currentNode.getXPos(), currentNode.getYPos(), visited);
@@ -55,8 +64,25 @@ public class Maze {
             });
             visited.add(currentNode);
         }
-        for (Tile t : path) {
-            this.maze[t.getXPos()][t.getYPos()] = new ITile(t.getXPos(), t.getYPos());
+        //set start end
+        this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(0, 0);
+        this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(size-1, size-1);
+
+        this.start = this.maze[path.get(0).getXPos()][path.get(0).getYPos()];
+        this.end = this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()];
+
+        //ste other
+        for (int i = 1; i < path.size()-1; i++) {
+            Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
+            
+            if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {
+                this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new ITile(path.get(i).getXPos(), path.get(i).getYPos());
+            }
+            else {
+                this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
+            }
+
+            System.out.println(currt.getXPos() + " " + currt.getYPos());
         }
 
     }
@@ -86,15 +112,32 @@ public class Maze {
 
         for (int i = 0; i < this.size; i++) {
             for (int j = 0; j < this.size; j++) {
-                this.maze[i][j] = new Tile(i, j);
+                this.maze[j][i] = new Tile(j, i);
             }
         }
+    }
+
+    public boolean checkMaze() {
+        
+        Tile curr = this.start;
+        ArrayList<Tile> neighbors;
+        HashSet<Tile> visited = new HashSet<Tile>();
+
+
+        while(curr != this.end) {
+            neighbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
+
+        }
+        
+        
+        
+        return true;
     }
 
     public void draw(Graphics g) {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                this.maze[i][j].paint(g);
+                this.maze[i][j].paintComponent(g);
             }
         }
     }

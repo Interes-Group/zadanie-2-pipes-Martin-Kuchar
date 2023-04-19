@@ -12,8 +12,8 @@ public class ITile extends Tile {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
         
         g.setColor(Color.BLUE);
 

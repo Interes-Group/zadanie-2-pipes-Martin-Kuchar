@@ -7,22 +7,23 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JSlider;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.event.ChangeEvent;
 
 import lombok.Getter;
 import sk.stuba.fei.uim.oop.maze.*;
 import sk.stuba.fei.uim.oop.gui.Render;
-import sk.stuba.fei.uim.oop.maze.Maze;
 
 public class GameLogic extends UniversalAdapter {
     @Getter
     private Render render;
     private Maze maze;
     private int mazeSize;
+    private JFrame frame;
 
-    public GameLogic() {
-        this.mazeSize = 10;
-
+    public GameLogic(JFrame f) {
+        this.mazeSize = 6;
+        this.frame = f;
         this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
         this.render.addMouseListener(this);
@@ -42,7 +43,16 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-
+        System.out.println(e.getKeyCode());
+        if (e.getKeyCode() == 82) {
+            this.generateMaze(this.mazeSize);
+        }
+        else if(e.getKeyCode() == 27) {
+            this.frame.dispose();
+        }
+        else if(e.getKeyCode() == 32) {
+            this.maze.checkMaze();
+        }
     }
 
     @Override
@@ -51,7 +61,7 @@ public class GameLogic extends UniversalAdapter {
             this.generateMaze(this.mazeSize);
         }
         else {
-            
+            this.maze.checkMaze();
         }
     }
 
@@ -60,18 +70,25 @@ public class GameLogic extends UniversalAdapter {
         Component c = (Component)this.render.getComponentAt(e.getPoint());
         if(c instanceof Tile){
             ((Tile)c).rotateDirection();
+            ((Tile)c).setHighlight(true);
             this.render.repaint();
+
+            //System.out.println(((Tile)c).getXPos() + " " + ((Tile)c).getYPos());
         }
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
         Component c = (Component)this.render.getComponentAt(e.getPoint());
-        if(c instanceof Tile) {
-            ((Tile) c ).setHighlight(true);
-            this.render.revalidate();
-            this.render.repaint();
+       
+        if(!(c instanceof Tile)) {
+            return;    
         }
+
+        ((Tile) c ).setHighlight(true);
+        //this.render.revalidate();
+        this.render.repaint();
+
 
     }
 

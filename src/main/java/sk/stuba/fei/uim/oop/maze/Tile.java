@@ -53,17 +53,20 @@ public class Tile extends JPanel{
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        g.setColor(Color.black);
-        g.drawRect(0, 0, this.getWidth(), this.getHeight());
+    public void paintComponent(Graphics g) {
         
-        if(this.highlight) {
+        super.paintComponent(g);
+        g.setColor(Color.BLACK);
+        this.setBackground(Color.WHITE);
+            
+        g.drawRect(0, 0, this.getWidth(), this.getHeight());
+
+        if(highlight) {
+            g.setColor(Color.RED);
             ((Graphics2D) g).setStroke(new BasicStroke(10));
-            g.drawRect(0, 0, this.getWidth(), this.getHeight());
-            this.highlight = false;
-            System.out.println(this.xPos);
-            System.out.println(this.yPos);
+            g.drawRect(5, 5, this.getWidth()-10, this.getHeight()-10);
+            highlight = false;
         }
+
     }
 }

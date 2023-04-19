@@ -13,8 +13,8 @@ public class LTile extends Tile {
     }
 
     @Override
-    public void paint(Graphics g) {
-        super.paint(g);
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
 
         g.setColor(Color.BLUE);
 
@@ -26,10 +26,10 @@ public class LTile extends Tile {
         }
         if (this.direction.contains(Direction.DOWN)) {
             g.fillRect(this.getWidth()/2-6, this.getHeight()/2, 12, this.getHeight());
-            
         }
         if (this.direction.contains(Direction.LEFT)) {
             g.fillRect(0, (this.getHeight()/2)-6, this.getWidth()/2, 12);
         }
+        
     }
 }
