@@ -10,7 +10,6 @@ import sk.stuba.fei.uim.oop.maze.*;
 
 public class Render extends JPanel {
     private Maze maze;
-    
 
     public Render(Maze maze) {
         this.setMaze(maze);
@@ -20,6 +19,7 @@ public class Render extends JPanel {
 
     public void setMaze(Maze maze) {
         this.removeAll();
+        this.repaint();
         this.maze = maze;
         this.setLayout(new GridLayout(this.maze.getSize(), this.maze.getSize()));
         

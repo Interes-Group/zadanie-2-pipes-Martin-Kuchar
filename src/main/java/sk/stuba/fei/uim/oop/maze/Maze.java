@@ -1,6 +1,5 @@
 package sk.stuba.fei.uim.oop.maze;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,6 +14,9 @@ public class Maze {
     private Tile[][] maze;
     private Tile start;
     private Tile end;
+    
+    @Setter @Getter
+    private boolean solved;
 
     public Maze(int size) {
         this.size = size;
@@ -35,7 +37,8 @@ public class Maze {
     }
 
     private void generateMaze() {
-
+        //TODO prijebanec sa nanakresli tile pri vrateni sa a ked s a vracia neda dobry tile na krizovatke idealne zmazat cestu po vrateni
+        
         int[] start = {0,0};
         int[] end = {this.size-1, this.size-1};
 
@@ -89,7 +92,7 @@ public class Maze {
                 this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
             }
 
-            System.out.println(currt.getXPos() + " " + currt.getYPos());
+            //System.out.println(currt.getXPos() + " " + currt.getYPos());
         }
 
     }
@@ -117,52 +120,75 @@ public class Maze {
     public boolean checkMaze() {
         
         Tile curr = this.start;
+        ArrayList<Tile> stack = new ArrayList<Tile>();
         ArrayList<Tile> neighbors;
         HashSet<Tile> visited = new HashSet<Tile>();
         Direction lastDir = null;
-        //najde aj pipe ktore su spravne otocene ale nejsu v spravnom x y
-        //GL s fixom :D
+        
+        stack.add(curr);  //TODO checkuje aj tile kt je napojenz na end ale neni napojeny na path
 
         while(curr != this.end) {
-            neighbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
-            if  (neighbors.size() == 0) {
+            
+            if( stack.size() == 0) {
                 return false;
             }
+
+            curr = stack.remove(0);
+            neighbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
+
+            if (neighbors.size() == 0) {
+                return false;
+            }
+
             visited.add(curr);
             for (Tile t : neighbors) {
                 if (t instanceof LTile || t instanceof ITile || t instanceof EndTile) {
-                    if (curr.getDirection().contains(Direction.DOWN) && t.getDirection().contains(Direction.UP) && lastDir != Direction.DOWN) {
+                    if (this.getRelativeDirection(curr, t) == Direction.DOWN && curr.getDirection().contains(Direction.DOWN) && t.getDirection().contains(Direction.UP) && lastDir != Direction.DOWN) {
                         t.setInPath(true);
                         lastDir = Direction.UP;
-                        curr = t;
-                        break;
+                        stack.add(t);
                     }
-                    else if (curr.getDirection().contains(Direction.UP) && t.getDirection().contains(Direction.DOWN) && lastDir != Direction.UP) {
+                    else if (this.getRelativeDirection(curr, t) == Direction.UP && curr.getDirection().contains(Direction.UP) && t.getDirection().contains(Direction.DOWN) && lastDir != Direction.UP) {
                         t.setInPath(true);
                         lastDir = Direction.DOWN;
-                        curr = t;
-                        break;
+                        stack.add(t);
                     }
-                    else if (curr.getDirection().contains(Direction.RIGHT) && t.getDirection().contains(Direction.LEFT) && lastDir != Direction.RIGHT) {
+                    else if (this.getRelativeDirection(curr, t) == Direction.RIGHT && curr.getDirection().contains(Direction.RIGHT) && t.getDirection().contains(Direction.LEFT) && lastDir != Direction.RIGHT) {
                         t.setInPath(true);
                         lastDir = Direction.LEFT;
-                        curr = t;
-                        break;
+                        stack.add(t);
                     }
-                    else if (curr.getDirection().contains(Direction.LEFT) && t.getDirection().contains(Direction.RIGHT) && lastDir != Direction.LEFT) {
+                    else if (this.getRelativeDirection(curr, t) == Direction.LEFT && curr.getDirection().contains(Direction.LEFT) && t.getDirection().contains(Direction.RIGHT) && lastDir != Direction.LEFT) {
                         t.setInPath(true);
                         lastDir = Direction.RIGHT;
-                        curr = t;
-                        break;
-                    }
-                    else {
-                        return false;
+                        stack.add(t);
                     }
                 }
             }
-
+            
         }
         
         return true;
+    }
+
+    private Direction getRelativeDirection(Tile t, Tile r) {
+        
+        if (t.getXPos() > r.getXPos()) {
+            return Direction.LEFT;
+        }
+        else if (t.getXPos() < r.getXPos()) {
+            return Direction.RIGHT;
+        }
+        else if (t.getYPos() < r.getYPos()) {
+            return Direction.DOWN;
+        }
+        else {
+            return Direction.UP;
+        }
+
+    }
+
+    public void resetInPath() {
+        //TODO resetni cyan farbu vsetkeho po pohnuti tile
     }
 }

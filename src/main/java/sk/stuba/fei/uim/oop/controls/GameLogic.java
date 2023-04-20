@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JSlider;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.event.ChangeEvent;
 
 import lombok.Getter;
@@ -18,8 +19,13 @@ public class GameLogic extends UniversalAdapter {
     @Getter
     private Render render;
     private Maze maze;
+    @Getter
     private int mazeSize;
     private JFrame frame;
+    @Getter
+    private JLabel infoLabel;
+    private int level;
+
 
     public GameLogic(JFrame f) {
         this.mazeSize = 4;
@@ -28,6 +34,9 @@ public class GameLogic extends UniversalAdapter {
         this.render = new Render(this.maze);
         this.render.addMouseListener(this);
         this.render.addMouseMotionListener(this);
+        this.level = 1;
+        this.infoLabel = new JLabel();
+        this.refreshInfo();
         
 
     }
@@ -39,6 +48,19 @@ public class GameLogic extends UniversalAdapter {
             this.render.revalidate();
 
         }
+        this.refreshInfo();
+    }
+
+    private void checkMaze() {
+        
+        if (this.maze.checkMaze() && this.maze.isSolved()) {
+            this.level++;
+        }
+        this.render.repaint();
+    }
+
+    private void refreshInfo() {
+        this.infoLabel.setText("Size of board is: " + String.valueOf(mazeSize) + "\nYou are on level: " + String.valueOf(level));
     }
 
     @Override
@@ -51,8 +73,7 @@ public class GameLogic extends UniversalAdapter {
             this.frame.dispose();
         }
         else if(e.getKeyCode() == 32) {
-            this.maze.checkMaze();
-            this.render.repaint();
+            this.checkMaze();
         }
     }
 
@@ -62,7 +83,8 @@ public class GameLogic extends UniversalAdapter {
             this.generateMaze(this.mazeSize);
         }
         else {
-            this.maze.checkMaze();
+            System.out.println(this.maze.checkMaze());
+            
             this.render.repaint();
         }
     }
@@ -75,7 +97,6 @@ public class GameLogic extends UniversalAdapter {
             ((Tile)c).setHighlight(true);
             this.render.repaint();
 
-            //System.out.println(((Tile)c).getXPos() + " " + ((Tile)c).getYPos());
         }
     }
 
@@ -86,17 +107,17 @@ public class GameLogic extends UniversalAdapter {
         if(!(c instanceof Tile)) {
             return;    
         }
-
         ((Tile) c ).setHighlight(true);
-        //this.render.revalidate();
         this.render.repaint();
-
 
     }
 
     @Override
     public void stateChanged(ChangeEvent e) {
-        this.mazeSize = ((JSlider) e.getSource()).getValue();
+        if(((JSlider) e.getSource()).getValueIsAdjusting()) {
+            this.mazeSize = ((JSlider) e.getSource()).getValue();
+            this.generateMaze(this.mazeSize);
+        }
     }
     
 }
