@@ -189,6 +189,10 @@ public class Maze {
     }
 
     public void resetInPath() {
-        //TODO resetni cyan farbu vsetkeho po pohnuti tile
+        for (Tile[] tiles : maze) {
+            for (Tile t : tiles) {
+                t.setInPath(false);
+            }
+        }
     }
 }

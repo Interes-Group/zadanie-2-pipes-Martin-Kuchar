@@ -1,7 +1,6 @@
 package sk.stuba.fei.uim.oop.gui;
 
 import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;

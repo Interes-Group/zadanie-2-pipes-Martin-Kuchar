@@ -52,15 +52,14 @@ public class GameLogic extends UniversalAdapter {
     }
 
     private void checkMaze() {
-        
-        if (this.maze.checkMaze() && this.maze.isSolved()) {
+        if (this.maze.checkMaze() && !this.maze.isSolved()) {
             this.level++;
         }
         this.render.repaint();
     }
 
     private void refreshInfo() {
-        this.infoLabel.setText("Size of board is: " + String.valueOf(mazeSize) + "\nYou are on level: " + String.valueOf(level));
+        this.infoLabel.setText("Size of board is: " + String.valueOf(mazeSize) + "    You are on level: " + String.valueOf(level));
     }
 
     @Override
@@ -83,8 +82,7 @@ public class GameLogic extends UniversalAdapter {
             this.generateMaze(this.mazeSize);
         }
         else {
-            System.out.println(this.maze.checkMaze());
-            
+            this.checkMaze();
             this.render.repaint();
         }
     }
@@ -95,6 +93,7 @@ public class GameLogic extends UniversalAdapter {
         if(c instanceof Tile){
             ((Tile)c).rotateDirection();
             ((Tile)c).setHighlight(true);
+            this.maze.resetInPath();
             this.render.repaint();
 
         }

@@ -44,7 +44,6 @@ public class Game {
         sideMenu.setLayout(new GridLayout(2, 2));
         sideMenu.add(buttonRestart);
         sideMenu.add(buttonCheck);
-        //sideMenu.add(logic.getBoardSizeLabel());
         sideMenu.add(slider);
         sideMenu.add(logic.getInfoLabel());
         frame.add(sideMenu, BorderLayout.PAGE_START);
