@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.oop.maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Random;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,13 +15,13 @@ public class Maze {
     private Tile[][] maze;
     private Tile start;
     private Tile end;
-    
+    private Random rand;
     @Setter @Getter
     private boolean solved;
 
     public Maze(int size) {
         this.size = size;
-
+        this.rand = new Random();
         this.maze = new Tile[this.size][this.size];
 
         for (int i = 0; i < this.size; i++) {
@@ -29,6 +30,7 @@ public class Maze {
             }
         }
         this.generateMaze();
+        this.shuffleTiles();
     }
 
     public Tile getTile(int x, int y) {
@@ -38,9 +40,8 @@ public class Maze {
 
     private void generateMaze() {
         //TODO prijebanec sa nanakresli tile pri vrateni sa a ked s a vracia neda dobry tile na krizovatke idealne zmazat cestu po vrateni
-        
-        int[] start = {0,0};
-        int[] end = {this.size-1, this.size-1};
+        int[] start = {2,0};
+        int[] end = {this.size-2, this.size-1};
 
         ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
@@ -57,10 +58,9 @@ public class Maze {
                 continue;
             }
             if (step.getPrevious() != null) {
-                //path.add(currentNode);
                 path.add(step.getPrevious());
             }
-            if(currentNode == this.maze[size-1][size-1]) {
+            if(currentNode == this.maze[end[0]][end[1]]) {
                 path.add(currentNode);
                 break;
             }
@@ -74,27 +74,28 @@ public class Maze {
             });
             visited.add(currentNode);
         }
-        //set start end
-        this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(0, 0);
-        this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(size-1, size-1);
+
+        this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(start[0], start[1]);
+        this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(end[0], end[1]);
 
         this.start = this.maze[path.get(0).getXPos()][path.get(0).getYPos()];
         this.end = this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()];
 
-        //set other
+        Collections.reverse(path);
+
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
             
             if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {
+                if(this.getNeighbors(currt.getXPos(), currt.getYPos(), visited).size() > 2){
+
+                }
                 this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new ITile(path.get(i).getXPos(), path.get(i).getYPos());
             }
             else {
                 this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
             }
-
-            //System.out.println(currt.getXPos() + " " + currt.getYPos());
         }
-
     }
 
     private ArrayList<Tile> getNeighbors(int x, int y, HashSet<Tile> visited) {
@@ -119,13 +120,15 @@ public class Maze {
 
     public boolean checkMaze() {
         
+        //TODO random zvoleny start a end
+
         Tile curr = this.start;
         ArrayList<Tile> stack = new ArrayList<Tile>();
         ArrayList<Tile> neighbors;
         HashSet<Tile> visited = new HashSet<Tile>();
         Direction lastDir = null;
         
-        stack.add(curr);  //TODO checkuje aj tile kt je napojenz na end ale neni napojeny na path
+        stack.add(curr);  
 
         while(curr != this.end) {
             
@@ -136,7 +139,7 @@ public class Maze {
             curr = stack.remove(0);
             neighbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
 
-            if (neighbors.size() == 0) {
+            if (neighbors.size() == 0 && curr != this.end) {
                 return false;
             }
 
@@ -165,9 +168,7 @@ public class Maze {
                     }
                 }
             }
-            
         }
-        
         return true;
     }
 
@@ -192,6 +193,17 @@ public class Maze {
         for (Tile[] tiles : maze) {
             for (Tile t : tiles) {
                 t.setInPath(false);
+            }
+        }
+    }
+
+    private void shuffleTiles() {
+        for (Tile[] tiles : maze) {
+            for (Tile t : tiles) {
+                
+                for(int i = 0; i < this.rand.nextInt(4); i++){
+                    t.rotateDirection();
+                }
             }
         }
     }

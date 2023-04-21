@@ -51,11 +51,13 @@ public class GameLogic extends UniversalAdapter {
         this.refreshInfo();
     }
 
-    private void checkMaze() {
+    private void checkMaze() {  
+        System.out.println(this.maze.checkMaze());
         if (this.maze.checkMaze() && !this.maze.isSolved()) {
             this.level++;
+            this.generateMaze(this.mazeSize);
         }
-        this.render.repaint();
+        
     }
 
     private void refreshInfo() {
@@ -66,6 +68,7 @@ public class GameLogic extends UniversalAdapter {
     public void keyPressed(KeyEvent e) {
         System.out.println(e.getKeyCode());
         if (e.getKeyCode() == 82) {
+            this.level = 1;
             this.generateMaze(this.mazeSize);
         }
         else if(e.getKeyCode() == 27) {
@@ -73,13 +76,16 @@ public class GameLogic extends UniversalAdapter {
         }
         else if(e.getKeyCode() == 32) {
             this.checkMaze();
+            this.refreshInfo();
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (((JButton)e.getSource()).getText() == "RESTART") {
+            this.level = 1;
             this.generateMaze(this.mazeSize);
+
         }
         else {
             this.checkMaze();
