@@ -40,8 +40,8 @@ public class Maze {
 
     private void generateMaze() {
         //TODO prijebanec sa nanakresli tile pri vrateni sa a ked s a vracia neda dobry tile na krizovatke idealne zmazat cestu po vrateni
-        int[] start = {2,0};
-        int[] end = {this.size-2, this.size-1};
+        int[] start = {0,0};
+        int[] end = {this.size-1, this.size-1};
 
         ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
@@ -81,19 +81,18 @@ public class Maze {
         this.start = this.maze[path.get(0).getXPos()][path.get(0).getYPos()];
         this.end = this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()];
 
-        Collections.reverse(path);
-
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
-            
-            if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {
-                if(this.getNeighbors(currt.getXPos(), currt.getYPos(), visited).size() > 2){
 
+            if (!(currt instanceof LTile) && !(currt instanceof ITile)) {
+                if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {
+    
+                    this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new ITile(path.get(i).getXPos(), path.get(i).getYPos());
                 }
-                this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new ITile(path.get(i).getXPos(), path.get(i).getYPos());
-            }
-            else {
-                this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
+                else {
+                    this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
+                }
+
             }
         }
     }
