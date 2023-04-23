@@ -28,7 +28,7 @@ public class GameLogic extends UniversalAdapter {
 
 
     public GameLogic(JFrame f) {
-        this.mazeSize = 8;
+        this.mazeSize = 4;
         this.frame = f;
         this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
@@ -56,6 +56,9 @@ public class GameLogic extends UniversalAdapter {
             this.level++;
             this.generateMaze(this.mazeSize);
         }
+        else {
+            this.level = 1;
+        }
     }
 
     private void refreshInfo() {
@@ -64,16 +67,17 @@ public class GameLogic extends UniversalAdapter {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        System.out.println(e.getKeyCode());
-        if (e.getKeyCode() == 82) {
+        System.out.println(e.getKeyCode() + KeyEvent.VK_SPACE);
+        if (e.getKeyCode() == KeyEvent.VK_R) {
             this.level = 1;
             this.generateMaze(this.mazeSize);
         }
-        else if(e.getKeyCode() == 27) {
+        else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.frame.dispose();
         }
-        else if(e.getKeyCode() == 32) {
+        else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
             this.checkMaze();
+            this.render.repaint();
             this.refreshInfo();
         }
     }
@@ -87,6 +91,7 @@ public class GameLogic extends UniversalAdapter {
         }
         else {
             this.checkMaze();
+            this.refreshInfo();
             this.render.repaint();
         }
     }
@@ -113,6 +118,11 @@ public class GameLogic extends UniversalAdapter {
         ((Tile) c ).setHighlight(true);
         this.render.repaint();
 
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        this.render.repaint();
     }
 
     @Override

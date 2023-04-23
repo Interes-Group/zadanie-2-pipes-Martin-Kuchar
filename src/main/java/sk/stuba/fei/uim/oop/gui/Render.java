@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 import sk.stuba.fei.uim.oop.maze.*;
 
@@ -13,7 +15,6 @@ public class Render extends JPanel {
     public Render(Maze maze) {
         this.setMaze(maze);
         this.setBackground(Color.LIGHT_GRAY);
-
     }
 
     public void setMaze(Maze maze) {

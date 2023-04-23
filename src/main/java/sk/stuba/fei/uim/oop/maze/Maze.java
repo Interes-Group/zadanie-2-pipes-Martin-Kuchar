@@ -3,6 +3,7 @@ package sk.stuba.fei.uim.oop.maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Random;
 
 import lombok.Getter;
@@ -40,7 +41,6 @@ public class Maze {
 
     private void generateMaze() {
         //TODO asi mu jebe pri vacani v cete
-        //TODO pri algo zisti prveho suseda cez relative dir asi idk
         int[] start = {0, 0};
         int[] end = {0, 0};
 
@@ -49,16 +49,12 @@ public class Maze {
             start[1] = rand.nextInt(size);
             end[0] = size-1;
             end[1] = rand.nextInt(size);
-            //maze[start[0]][start[1]] = new EndTile(start[0], start[0], Direction.RIGHT);
-            //maze[end[0]][end[1]] = new EndTile(end[0], end[0], Direction.LEFT);
         }
         else {
             start[0] = rand.nextInt(size);
             start[1] = 0;
             end[0] = rand.nextInt(size);
             end[1] = size-1;
-            //maze[start[0]][start[1]] = new EndTile(start[0], start[0], Direction.DOWN);
-            //maze[end[0]][end[1]] = new EndTile(end[0], end[0], Direction.UP);
         }
 
         ArrayList<Step> stack = new ArrayList<Step>();
@@ -75,8 +71,9 @@ public class Maze {
             if (visited.contains(currentNode)) {
                 continue;
             }
+
             if (step.getPrevious() != null) {
-                path.add(step.getPrevious());
+                    path.add(step.getPrevious());
             }
 
             if(currentNode == this.maze[end[0]][end[1]]) {
@@ -88,7 +85,7 @@ public class Maze {
             Collections.shuffle(allNeighbours);
 
             if (allNeighbours.size() == 0) {
-                path.remove(step.getPrevious());
+                path.remove(path.get(path.size()-1));
             }
 
             allNeighbours.forEach(neighbour -> {
@@ -99,18 +96,17 @@ public class Maze {
             visited.add(currentNode);
         }
 
-        //this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(start[0], start[1]);
-        //this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(end[0], end[1]);
-
-        
-        maze[start[0]][start[1]] = new EndTile(start[0], start[1], this.getRelativeDirection(this.maze[start[0]][start[1]], path.get(1)));
+        maze[start[0]][start[1]] = new StartTile(start[0], start[1], this.getRelativeDirection(this.maze[start[0]][start[1]], path.get(1)));
         maze[end[0]][end[1]] = new EndTile(end[0], end[1], this.getRelativeDirection(this.maze[end[0]][end[1]], path.get(path.size()-2)));
         
         this.start = this.maze[start[0]][start[1]];
         this.end = this.maze[end[0]][end[1]];
 
+        path = new ArrayList<Tile>(new LinkedHashSet<Tile>(path)); //remove duplicite
+
         for (int i = 1; i < path.size()-1; i++) {
-            Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
+            Tile currt = path.get(i);
+            System.out.println(currt.getXPos() + " " + currt.getYPos());
 
             if (!(currt instanceof LTile) && !(currt instanceof ITile)) {
                 if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {
