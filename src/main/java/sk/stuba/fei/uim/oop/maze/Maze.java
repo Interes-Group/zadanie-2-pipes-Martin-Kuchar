@@ -39,9 +39,27 @@ public class Maze {
     }
 
     private void generateMaze() {
-        //TODO prijebanec sa nanakresli tile pri vrateni sa a ked s a vracia neda dobry tile na krizovatke idealne zmazat cestu po vrateni
-        int[] start = {0,0};
-        int[] end = {this.size-1, this.size-1};
+        //TODO asi mu jebe pri vacani v cete
+        //TODO pri algo zisti prveho suseda cez relative dir asi idk
+        int[] start = {0, 0};
+        int[] end = {0, 0};
+
+        if(rand.nextInt(2) == 0) {
+            start[0] = 0;
+            start[1] = rand.nextInt(size);
+            end[0] = size-1;
+            end[1] = rand.nextInt(size);
+            //maze[start[0]][start[1]] = new EndTile(start[0], start[0], Direction.RIGHT);
+            //maze[end[0]][end[1]] = new EndTile(end[0], end[0], Direction.LEFT);
+        }
+        else {
+            start[0] = rand.nextInt(size);
+            start[1] = 0;
+            end[0] = rand.nextInt(size);
+            end[1] = size-1;
+            //maze[start[0]][start[1]] = new EndTile(start[0], start[0], Direction.DOWN);
+            //maze[end[0]][end[1]] = new EndTile(end[0], end[0], Direction.UP);
+        }
 
         ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
@@ -60,13 +78,19 @@ public class Maze {
             if (step.getPrevious() != null) {
                 path.add(step.getPrevious());
             }
+
             if(currentNode == this.maze[end[0]][end[1]]) {
                 path.add(currentNode);
                 break;
             }
-            //ArrayList<Tile> allNeighbours = currentNode.getAllNeighbour();
+            
             ArrayList<Tile> allNeighbours = this.getNeighbors(currentNode.getXPos(), currentNode.getYPos(), visited);
             Collections.shuffle(allNeighbours);
+
+            if (allNeighbours.size() == 0) {
+                path.remove(step.getPrevious());
+            }
+
             allNeighbours.forEach(neighbour -> {
                 if (!visited.contains(neighbour)) {
                     stack.add(0, new Step(neighbour, currentNode));
@@ -75,11 +99,15 @@ public class Maze {
             visited.add(currentNode);
         }
 
-        this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(start[0], start[1]);
-        this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(end[0], end[1]);
+        //this.maze[path.get(0).getXPos()][path.get(0).getYPos()] = new EndTile(start[0], start[1]);
+        //this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()] = new EndTile(end[0], end[1]);
 
-        this.start = this.maze[path.get(0).getXPos()][path.get(0).getYPos()];
-        this.end = this.maze[path.get(path.size()-1).getXPos()][path.get(path.size()-1).getYPos()];
+        
+        maze[start[0]][start[1]] = new EndTile(start[0], start[1], this.getRelativeDirection(this.maze[start[0]][start[1]], path.get(1)));
+        maze[end[0]][end[1]] = new EndTile(end[0], end[1], this.getRelativeDirection(this.maze[end[0]][end[1]], path.get(path.size()-2)));
+        
+        this.start = this.maze[start[0]][start[1]];
+        this.end = this.maze[end[0]][end[1]];
 
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = this.maze[path.get(i).getXPos()][path.get(i).getYPos()];
@@ -92,7 +120,6 @@ public class Maze {
                 else {
                     this.maze[path.get(i).getXPos()][path.get(i).getYPos()] = new LTile(path.get(i).getXPos(), path.get(i).getYPos());
                 }
-
             }
         }
     }
@@ -118,8 +145,6 @@ public class Maze {
     }
 
     public boolean checkMaze() {
-        
-        //TODO random zvoleny start a end
 
         Tile curr = this.start;
         ArrayList<Tile> stack = new ArrayList<Tile>();
@@ -199,10 +224,13 @@ public class Maze {
     private void shuffleTiles() {
         for (Tile[] tiles : maze) {
             for (Tile t : tiles) {
-                
-                for(int i = 0; i < this.rand.nextInt(4); i++){
-                    t.rotateDirection();
+                if(!(t instanceof EndTile)) {
+                    for(int i = 0; i < this.rand.nextInt(4); i++){
+                        t.rotateDirection();
+                    }
+
                 }
+                
             }
         }
     }

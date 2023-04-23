@@ -28,7 +28,7 @@ public class Game {
         buttonRestart.setFocusable(false);
         buttonCheck.addActionListener(logic);
 
-        JSlider slider = new JSlider(JSlider.HORIZONTAL, 6, 12, 6);
+        JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 12, 8);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(1);
         slider.setSnapToTicks(true);

@@ -9,7 +9,7 @@ public class LTile extends Tile {
     public LTile(int x, int y) {
         super(x, y);
         this.direction.add(Direction.UP);
-        this.direction.add(Direction.RIGHT);
+        this.direction.add(Direction.LEFT);
     }
 
     @Override

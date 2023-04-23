@@ -28,7 +28,7 @@ public class GameLogic extends UniversalAdapter {
 
 
     public GameLogic(JFrame f) {
-        this.mazeSize = 4;
+        this.mazeSize = 8;
         this.frame = f;
         this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
@@ -52,12 +52,10 @@ public class GameLogic extends UniversalAdapter {
     }
 
     private void checkMaze() {  
-        System.out.println(this.maze.checkMaze());
         if (this.maze.checkMaze() && !this.maze.isSolved()) {
             this.level++;
             this.generateMaze(this.mazeSize);
         }
-        
     }
 
     private void refreshInfo() {
