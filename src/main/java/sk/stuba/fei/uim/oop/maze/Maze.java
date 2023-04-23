@@ -57,52 +57,41 @@ public class Maze {
             end[1] = size-1;
         }
 
-        ArrayList<Step> stack = new ArrayList<Step>();
         ArrayList<Tile> path = new ArrayList<Tile>();
+        ArrayList<Tile> neigbors = new ArrayList<Tile>();
         HashSet<Tile> visited = new HashSet<Tile>();
 
-        
-       stack.add(new Step(this.maze[start[0]][start[1]], null));
+        path.add( this.maze[start[0]][start[1]]);
 
-       while (!stack.isEmpty()) {
-            Step step = stack.remove(0);
-            Tile currentNode = step.getCurrent();
-        
-            if (visited.contains(currentNode)) {
+        while(path.get(path.size()-1) != this.maze[end[0]][end[1]]) {
+            Tile curr = path.get(path.size()-1);
+            visited.add(curr);
+
+            neigbors = this.getNeighbors(curr.getXPos(), curr.getYPos(), visited);
+            Collections.shuffle(neigbors);
+
+            if(neigbors.isEmpty()) {
+                path.remove(path.size()-1);
                 continue;
             }
 
-            if (step.getPrevious() != null) {
-                    path.add(step.getPrevious());
+            for (Tile tile : neigbors) {
+                
+                    if (!visited.contains(tile)) {
+                        path.add(tile);
+                        break;
+                    }
             }
 
-            if(currentNode == this.maze[end[0]][end[1]]) {
-                path.add(currentNode);
-                break;
-            }
-            
-            ArrayList<Tile> allNeighbours = this.getNeighbors(currentNode.getXPos(), currentNode.getYPos(), visited);
-            Collections.shuffle(allNeighbours);
-
-            if (allNeighbours.size() == 0) {
-                path.remove(path.get(path.size()-1));
-            }
-
-            allNeighbours.forEach(neighbour -> {
-                if (!visited.contains(neighbour)) {
-                    stack.add(0, new Step(neighbour, currentNode));
-                }
-            });
-            visited.add(currentNode);
         }
+
+
 
         maze[start[0]][start[1]] = new StartTile(start[0], start[1], this.getRelativeDirection(this.maze[start[0]][start[1]], path.get(1)));
         maze[end[0]][end[1]] = new EndTile(end[0], end[1], this.getRelativeDirection(this.maze[end[0]][end[1]], path.get(path.size()-2)));
         
         this.start = this.maze[start[0]][start[1]];
         this.end = this.maze[end[0]][end[1]];
-
-        path = new ArrayList<Tile>(new LinkedHashSet<Tile>(path)); //remove duplicite
 
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = path.get(i);

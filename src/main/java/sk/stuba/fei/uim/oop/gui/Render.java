@@ -22,7 +22,6 @@ public class Render extends JPanel {
         this.repaint();
         this.maze = maze;
         this.setLayout(new GridLayout(this.maze.getSize(), this.maze.getSize()));
-        
  
         for (int i = 0; i < this.maze.getSize(); i++) {
             for (int j = 0; j < this.maze.getSize(); j++) {

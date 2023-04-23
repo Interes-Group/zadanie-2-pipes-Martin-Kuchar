@@ -75,7 +75,7 @@ public class GameLogic extends UniversalAdapter {
         else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             this.frame.dispose();
         }
-        else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+        else if(e.getKeyCode() == KeyEvent.VK_ENTER) {
             this.checkMaze();
             this.render.repaint();
             this.refreshInfo();
