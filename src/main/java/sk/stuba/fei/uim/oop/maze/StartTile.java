@@ -7,9 +7,7 @@ public class StartTile extends Tile {
 
     public StartTile(int x, int y, Direction d) {
         super(x, y);
-
         this.direction.add(d);
-
     }
 
     @Override

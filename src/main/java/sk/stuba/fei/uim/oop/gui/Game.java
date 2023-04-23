@@ -16,7 +16,6 @@ public class Game {
         frame.requestFocusInWindow();
         frame.setLayout(new BorderLayout());
         
-
         GameLogic logic = new GameLogic(frame);
         frame.addKeyListener(logic);
         
@@ -36,11 +35,6 @@ public class Game {
         slider.setPaintLabels(true);
         slider.addChangeListener(logic);
 
-        
-
-
-        
-
         sideMenu.setLayout(new GridLayout(2, 2));
         sideMenu.add(buttonRestart);
         sideMenu.add(buttonCheck);
@@ -49,8 +43,6 @@ public class Game {
         frame.add(sideMenu, BorderLayout.PAGE_START);
         frame.add(logic.getRender(),BorderLayout.CENTER);
         
-        frame.setVisible(true);
-                
+        frame.setVisible(true);           
     }
-
 }

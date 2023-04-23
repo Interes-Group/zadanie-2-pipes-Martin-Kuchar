@@ -16,11 +16,9 @@ public enum Direction {
                 d=DOWN;
                 return DOWN;
 
-
             case DOWN:
                 d=LEFT;
                 return LEFT;
-
 
             case LEFT:
                 d=UP;
@@ -28,8 +26,6 @@ public enum Direction {
 
             default:
                 return null;
-
         }
     }
-
 }

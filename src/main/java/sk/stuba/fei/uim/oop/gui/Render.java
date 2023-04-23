@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 
 import sk.stuba.fei.uim.oop.maze.*;
 

@@ -25,10 +25,10 @@ public class GameLogic extends UniversalAdapter {
     @Getter
     private JLabel infoLabel;
     private int level;
-
+//TODO vyjeb zbytocne listenery
 
     public GameLogic(JFrame f) {
-        this.mazeSize = 4;
+        this.mazeSize = 8;
         this.frame = f;
         this.maze = new Maze(mazeSize);
         this.render = new Render(this.maze);
@@ -37,8 +37,6 @@ public class GameLogic extends UniversalAdapter {
         this.level = 1;
         this.infoLabel = new JLabel();
         this.refreshInfo();
-        
-
     }
 
     public void generateMaze(int size) {
@@ -46,7 +44,6 @@ public class GameLogic extends UniversalAdapter {
         if (this.render != null) {
             this.render.setMaze(this.maze);
             this.render.revalidate();
-
         }
         this.refreshInfo();
     }
@@ -87,7 +84,6 @@ public class GameLogic extends UniversalAdapter {
         if (((JButton)e.getSource()).getText() == "RESTART") {
             this.level = 1;
             this.generateMaze(this.mazeSize);
-
         }
         else {
             this.checkMaze();
@@ -104,7 +100,6 @@ public class GameLogic extends UniversalAdapter {
             ((Tile)c).setHighlight(true);
             this.maze.resetInPath();
             this.render.repaint();
-
         }
     }
 
@@ -117,7 +112,6 @@ public class GameLogic extends UniversalAdapter {
         }
         ((Tile) c ).setHighlight(true);
         this.render.repaint();
-
     }
 
     @Override
@@ -132,5 +126,4 @@ public class GameLogic extends UniversalAdapter {
             this.generateMaze(this.mazeSize);
         }
     }
-    
 }

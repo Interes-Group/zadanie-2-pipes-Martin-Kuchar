@@ -35,6 +35,5 @@ public class LTile extends Tile {
         if (this.direction.contains(Direction.LEFT)) {
             g.fillRect(0, (this.getHeight()/2)-6, this.getWidth()/2, 12);
         }
-        
     }
 }

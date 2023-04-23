@@ -17,7 +17,7 @@ public class Tile extends JPanel{
     @Getter
     protected final int yPos;
     @Getter
-    protected ArrayList<Direction> direction; //set to private!!
+    protected ArrayList<Direction> direction;
     @Setter
     protected boolean highlight;
     @Setter
@@ -29,7 +29,6 @@ public class Tile extends JPanel{
         this.direction = new ArrayList<Direction>();
         this.highlight = false;
         this.inPath = false;
-        
     }
 
     public void rotateDirection() {
@@ -58,7 +57,6 @@ public class Tile extends JPanel{
 
     @Override
     public void paintComponent(Graphics g) {
-        
         super.paintComponent(g);
         g.setColor(Color.BLACK);
         this.setBackground(Color.WHITE);
@@ -71,6 +69,5 @@ public class Tile extends JPanel{
             g.drawRect(5, 5, this.getWidth()-10, this.getHeight()-10);
             highlight = false;
         }
-
     }
 }

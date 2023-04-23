@@ -4,12 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class EndTile extends Tile {
-//TODO najeb do constructuru aj driection
     public EndTile(int x, int y, Direction d) {
         super(x, y);
-
         this.direction.add(d);
-
     }
 
     @Override

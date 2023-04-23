@@ -3,7 +3,6 @@ package sk.stuba.fei.uim.oop.maze;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Random;
 
 import lombok.Getter;
@@ -35,12 +34,10 @@ public class Maze {
     }
 
     public Tile getTile(int x, int y) {
-        Tile t = this.maze[x][y];
-        return t;
+        return this.maze[x][y];
     }
 
     private void generateMaze() {
-        //TODO asi mu jebe pri vacani v cete
         int[] start = {0, 0};
         int[] end = {0, 0};
 
@@ -82,9 +79,7 @@ public class Maze {
                         break;
                     }
             }
-
         }
-
 
 
         maze[start[0]][start[1]] = new StartTile(start[0], start[1], this.getRelativeDirection(this.maze[start[0]][start[1]], path.get(1)));
@@ -124,7 +119,6 @@ public class Maze {
         if (y < this.size - 1 && !visited.contains(this.getTile(x, y+1))) {
             a.add(this.getTile(x, y+1));
         }
-
 
         return a;
     }
@@ -195,7 +189,6 @@ public class Maze {
         else {
             return Direction.UP;
         }
-
     }
 
     public void resetInPath() {
@@ -209,13 +202,9 @@ public class Maze {
     private void shuffleTiles() {
         for (Tile[] tiles : maze) {
             for (Tile t : tiles) {
-                if(!(t instanceof EndTile)) {
-                    for(int i = 0; i < this.rand.nextInt(4); i++){
-                        t.rotateDirection();
-                    }
-
+                for(int i = 0; i < this.rand.nextInt(4); i++){
+                    t.rotateDirection();
                 }
-                
             }
         }
     }
