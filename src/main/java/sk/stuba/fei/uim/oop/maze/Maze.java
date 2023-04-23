@@ -73,11 +73,10 @@ public class Maze {
             }
 
             for (Tile tile : neigbors) {
-                
-                    if (!visited.contains(tile)) {
-                        path.add(tile);
-                        break;
-                    }
+                if (!visited.contains(tile)) {
+                    path.add(tile);
+                    break;
+                }
             }
         }
 
@@ -90,7 +89,6 @@ public class Maze {
 
         for (int i = 1; i < path.size()-1; i++) {
             Tile currt = path.get(i);
-            System.out.println(currt.getXPos() + " " + currt.getYPos());
 
             if (!(currt instanceof LTile) && !(currt instanceof ITile)) {
                 if (path.get(i-1).getXPos() == path.get(i+1).getXPos() || path.get(i-1).getYPos() == path.get(i+1).getYPos()) {

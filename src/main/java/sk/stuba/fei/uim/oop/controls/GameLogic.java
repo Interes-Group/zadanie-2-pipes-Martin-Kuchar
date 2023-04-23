@@ -25,7 +25,6 @@ public class GameLogic extends UniversalAdapter {
     @Getter
     private JLabel infoLabel;
     private int level;
-//TODO vyjeb zbytocne listenery
 
     public GameLogic(JFrame f) {
         this.mazeSize = 8;

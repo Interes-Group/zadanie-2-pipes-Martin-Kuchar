@@ -20,14 +20,17 @@ public class Game {
         frame.addKeyListener(logic);
         
         JPanel sideMenu = new JPanel();
+        sideMenu.setFocusable(false);
         sideMenu.setBackground(Color.LIGHT_GRAY);
         JButton buttonRestart = new JButton("RESTART");
         JButton buttonCheck = new JButton("CHECK");
         buttonRestart.addActionListener(logic);
         buttonRestart.setFocusable(false);
         buttonCheck.addActionListener(logic);
+        buttonCheck.setFocusable(false);
 
         JSlider slider = new JSlider(JSlider.HORIZONTAL, 8, 12, 8);
+        slider.setFocusable(false);
         slider.setMinorTickSpacing(1);
         slider.setMajorTickSpacing(1);
         slider.setSnapToTicks(true);
